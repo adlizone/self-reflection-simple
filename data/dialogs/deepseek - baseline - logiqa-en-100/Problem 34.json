@@ -1,0 +1,22 @@
+[
+    {
+        "role": "system",
+        "content": "You are an expert in Logic.\nYour task is to answer the following multiple-choice questions.\nThink step-by-step to ensure you have the correct answer.\nThen, answer the question using the following format 'Action: Answer(\"[choice]\")'  \nThe parameter [choice] is the letter or number of the answer you want to select (e.g. \"A\", \"B\", \"C\", or \"D\")\nFor example, 'Answer(\"C\")' will select the choice \"C\" as the best answer.\nYou MUST select one of the available choices; the answer CANNOT be \"None of the Above\".\nBe concise in your response but include any essential information."
+    },
+    {
+        "role": "user",
+        "content": "Topic: Geography\nQuestion: What is the capital of the state where Johns Hopkins University is located?\nChoices:\n  A: Baltimore\n  B: Annapolis\n  C: Des Moines\n  D: Las Vegas"
+    },
+    {
+        "role": "assistant",
+        "content": "Thought: \nJohns Hopkins University is located in Baltimore, Maryland.\nThe capital of Maryland is Annapolis.\nAction: Answer(\"B\")"
+    },
+    {
+        "role": "user",
+        "content": "Topic: Logic\nContext: Confucius said? \"Do not do what you don't want to do to others.\"\nQuestion: Which of the following options is not a logical inference from the above sentence?\nChoices:\n  A: Only those who do what they want can do it to others.\n  B: If you want, then give it to others.\n  C: Don't treat others unless you want to.\n  D: Whatever is applied to people should be what they want.\n"
+    },
+    {
+        "role": "assistant",
+        "content": "Thought: \nThe statement by Confucius emphasizes not imposing on others what you yourself do not want. Let's analyze the options:\nA: \"Only those who do what they want can do it to others.\" This is not a logical inference because the original statement does not imply that only those who do what they want can impose it on others. It simply advises against imposing unwanted actions on others.\nB: \"If you want, then give it to others.\" This is not a logical inference because the original statement does not suggest that if you want something, you should give it to others. It focuses on avoiding actions you do not want for yourself.\nC: \"Don't treat others unless you want to.\" This is not a logical inference because the original statement does not imply that you should only treat others if you want to. It advises against treating others in ways you would not want to be treated.\nD: \"Whatever is applied to people should be what they want.\" This is not a logical inference because the original statement does not suggest that everything applied to people should be what they want. It only advises against imposing what you do not want on others.\nThe option that is not a logical inference from the original statement is A, as it introduces a condition that is not present in the original statement.\nAction: Answer(\"A\")"
+    }
+]
