@@ -1,9 +1,8 @@
 from models.model import Model
 from models.openai_model import OpenAIModel
-#from models.azure_model import AzureModel
+from models.azure_model import AzureModel
 #from models.google_model import GoogleModel
 #from models.anthropic_model import AnthropicModel
-from models.deepseek_model import DeepSeekModel
 
 class ModelFactory:
 
@@ -18,7 +17,8 @@ class ModelFactory:
             "gemini-1.0-pro": "google",
             "gemini-1.5-pro-preview-0409": "google",
             "claude-3-opus-20240229": "anthropic",
-            "deepseek": "deepseek"
+            "deepseek": "azure",
+            "phi-4" : "azure"
         }
 
         model_type = model_types[model_name]
@@ -34,10 +34,7 @@ class ModelFactory:
 
         elif model_type == "anthropic":
             return AnthropicModel(model_name)
-            
-        elif model_type == "deepseek":
-            return DeepSeekModel(model_name)
-
+    
         else:
             raise Exception(f"Unknown model type: {model_name}")
 

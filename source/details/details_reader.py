@@ -5,6 +5,11 @@ class DetailsReader:
 
     def is_correct(self, file_path: str, problem_id: int) -> bool:
         details = pd.read_csv(file_path)
+        
+        if problem_id not in details["problem_id"].values:
+            print("Problem id: ", problem_id, " not found")
+            return False
+        
         row = details[details["problem_id"] == problem_id].iloc[0]
         is_correct = row["score"] == 1
         return is_correct

@@ -1,68 +1,66 @@
-# Import libraries
-import time
-import requests
-import json
+# deepseek_model.py
 import os
+from azure.ai.inference import ChatCompletionsClient
+from azure.ai.inference.models import SystemMessage, UserMessage
+from azure.core.credentials import AzureKeyCredential
+import json
 from models.model import Model
-from dialogs.dialog import Dialog
 from models.response import Response
+from dialogs.dialog import Dialog
+import time
+
+endpoint = "https://aadil-m8isd264-swedencentral.services.ai.azure.com/models"
+key = "C3A38YrHYOzDQMZyjWykMF82LVe8AEX2Gvy4h76HLTzjZLqdIPs3JQQJ99BCACfhMk5XJ3w3AAAAACOGB1iu"
 
 class AzureModel(Model):
-
     def __init__(self, name: str):
         super().__init__(name)
-        self.api_key = os.getenv(f"{name.upper().replace('-', '_')}_API_KEY")
-        self.api_url = os.getenv(f"{name.upper().replace('-', '_')}_URL")
+        self.api_key = key  # Fetch API key from environment variables
+        self.api_url = endpoint  # DeepSeek API endpoint
 
     def get_response(self, dialog: Dialog) -> Response:
-
-        # Create the response
+        # Create the response object
         response = Response()
 
+        # Prepare messages for the API request
         messages = []
         for message in dialog.get_all():
             messages.append({
-                'role': message.role,
-                'content': message.content
+                "role": message.role,
+                "content": message.content
             })
 
         try:
+            # Set up the API request
+            
+            client = ChatCompletionsClient(
+                endpoint=endpoint,
+                credential=AzureKeyCredential(key),
+            )
+            
+            api_response = client.complete(
+                messages=messages,
+                max_tokens=2048,
+                temperature=0.8,
+                top_p=0.1,
+                presence_penalty=0.0,
+                frequency_penalty=0.0,
+                model=self.name
+            )
+            
+            # Note: Set tokens first in case there is an error below
+            response.input_tokens = api_response.usage.prompt_tokens
+            response.output_tokens = api_response.usage.completion_tokens
+            response.total_tokens = api_response.usage.total_tokens
 
-            # Set the API parameters
-            url = self.api_url + "/v1/chat/completions"
-
-            # Create the headers
-            headers = {
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-type": "application/json"}
-
-            # Create the body
-            body = {
-                "messages": messages,
-                "temperature": 0.0}
-
-            # Get the API response
-            api_response = requests.post(url, headers=headers, json=body)
-
-            # Get the API response body (json)
-            api_response_body = api_response.content.decode("utf-8")
-            api_response_body = json.loads(api_response_body)
-
-            # Get the response
-            response.text = api_response_body["choices"][0]["message"]["content"]
-
-            # Get the tokens
-            response.input_tokens = api_response_body["usage"]["prompt_tokens"]
-            response.output_tokens = api_response_body["usage"]["completion_tokens"]
-            response.total_tokens = response.input_tokens + response.output_tokens
-
+            response.text = api_response.choices[0].message.content
+            response.text = response.text.replace("\n\n", "\n")
+            
         except Exception as e:
-
-            # Add the error message
+            # Handle errors
             response.has_error = True
             response.text = f"Error: {str(e)}"
 
         finally:
-
+            time.sleep(1)
             return response

@@ -1,5 +1,6 @@
 # Import packages
 import os
+import time
 from datetime import datetime
 import pandas as pd
 from models.model_factory import ModelFactory
@@ -15,7 +16,7 @@ from models.pricing import get_pricing
 
 # Set the models
 model_names = [
-    "gpt-35-turbo"
+    "phi-4"
 ]
 
 # Set the agent
@@ -67,11 +68,12 @@ for model_name in model_names:
         # Loop through each exam problem
         for i, problem in enumerate(exam.problems):
             problem_id = i + 1
-
+      
             # DEBUG: Answer only the first n problems
-            if i >= 2:
+            if i >= 10:
                 break
-
+            
+            
             # Create the details row
             details_row = DetailsRow()
             episode_start_time = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -90,7 +92,7 @@ for model_name in model_names:
             # Get the agent's answer
             answer_response = agent.get_answer()
             answer = agent.get_answer_choice(answer_response.text)
-
+            
             # Log the agent's answer
             is_correct = answer == problem.answer
             score = 1 if is_correct else 0

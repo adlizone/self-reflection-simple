@@ -5,14 +5,19 @@ import time
 from models.model import Model
 from models.response import Response
 
+endpoint = "https://aadil-m8isd264-swedencentral.cognitiveservices.azure.com/openai/deployments/gpt-35-turbo"
+model_name = "gpt-35-turbo"
+deployment = "gpt-35-turbo"
+key = "C3A38YrHYOzDQMZyjWykMF82LVe8AEX2Gvy4h76HLTzjZLqdIPs3JQQJ99BCACfhMk5XJ3w3AAAAACOGB1iu"
+
 class OpenAIModel(Model):
 
     def __init__(self, name: str):
         super().__init__(name)
-        self.api_base = os.getenv("AZURE_BASE_URL")
-        self.api_key = os.getenv("AZURE_API_KEY")
+        self.api_base = endpoint
+        self.api_key = key
         self.api_version = "2024-02-01"
-        self.model_name = name + "-self-reflection"
+        self.model_name = model_name
 
     # Define a function to get the experiments from the Open AI API
     def get_response(self, dialog):
