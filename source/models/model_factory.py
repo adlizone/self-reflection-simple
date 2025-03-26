@@ -17,8 +17,8 @@ class ModelFactory:
             "gemini-1.0-pro": "google",
             "gemini-1.5-pro-preview-0409": "google",
             "claude-3-opus-20240229": "anthropic",
-            "deepseek": "azure",
-            "phi-4" : "azure"
+            "DeepSeek-V3": "azure",  #our model
+            "phi-4" : "azure"   #our model
         }
 
         model_type = model_types[model_name]

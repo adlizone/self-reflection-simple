@@ -70,8 +70,8 @@ for model_name in model_names:
             problem_id = i + 1
       
             # DEBUG: Answer only the first n problems
-            if i >= 10:
-                break
+            #if i >= 10:
+            #    break
             
             
             # Create the details row

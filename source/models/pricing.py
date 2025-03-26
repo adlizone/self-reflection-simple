@@ -10,5 +10,5 @@ def get_pricing(model_name):
         "gemini-1.5-pro-preview-0409": (0.007, 0.021),
         "claude-3-opus-20240229": (0.015, 0.075),
         "phi-4" : (0.0,0.0),
-        "deepseek" : (0.0, 0.0)}
+        "DeepSeek-V3" : (0.0, 0.0)}
     return model_pricing.get(model_name)

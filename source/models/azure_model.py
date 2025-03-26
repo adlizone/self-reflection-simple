@@ -9,6 +9,9 @@ from models.response import Response
 from dialogs.dialog import Dialog
 import time
 
+key = "C3A38YrHYOzDQMZyjWykMF82LVe8AEX2Gvy4h76HLTzjZLqdIPs3JQQJ99BCACfhMk5XJ3w3AAAAACOGB1iu"
+endpoint = "https://aadil-m8isd264-swedencentral.services.ai.azure.com/models"
+
 class AzureModel(Model):
     def __init__(self, name: str):
         super().__init__(name)

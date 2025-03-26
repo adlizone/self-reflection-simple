@@ -14,21 +14,13 @@ from details.details_writer import DetailsWriter
 from details.details_row import DetailsRow
 from dialogs.dialog_writer import DialogWriter
 from models.pricing import get_pricing
-from logs.log import Log
-from logs.log_level import LogLevel
 
 # Set the models
 model_names = [
-    "gpt-35-turbo",
-    "gpt-4",
-    "llama-2-7b-chat",
-    "llama-2-70b-chat",
-    "mistral-large",
-    "cohere-command-r-plus",
-    "gemini-1.0-pro",
-    "gemini-1.5-pro-preview-0409",
-    "claude-3-opus-20240229"
+    "phi-4"
 ]
+
+print("Experiment is running please dont interrept the pc")
 
 # Set the agents
 baseline_agent_names = [
@@ -47,24 +39,11 @@ agent_names = [
 
 # Set the exams
 exam_names = [
-    "comprehensive-100",
-    "aqua-rat-100",
     "logiqa-en-100",
-    "lsat-ar-100",
-    "lsat-lr-100",
-    "lsat-rc-100",
-    "sat-en-100",
-    "sat-math-100",
-    "arc-challenge-100",
-    "hella-swag-100",
-    "med-mcqa-100"
 ]
 
 # Set attempt id
 attempt_id = 2
-
-# Set the logging level
-log_level = LogLevel.DEBUG
 
 # Create the components
 model_factory = ModelFactory()
@@ -95,15 +74,12 @@ for model_name in model_names:
             dialogs_folder_path = f"../data/dialogs/{experiment.name}"
             details_file_path = f"../data/details/{experiment.name}.csv"
             results_file_path = f"../data/results/results.csv"
-            log_name_prefix = start_time.strftime("%Y-%m-%d %H-%M-%S")
-            log_folder_path = f"../data/logs/{log_name_prefix} - {experiment.name}"
 
             # Create the folders
             os.makedirs(dialogs_folder_path, exist_ok=True)
             os.makedirs(os.path.dirname(details_file_path), exist_ok=True)
             os.makedirs(os.path.dirname(results_file_path), exist_ok=True)
-            os.makedirs(log_folder_path, exist_ok=True)
-
+           
             # Create the details table
             details = []
 
@@ -115,19 +91,11 @@ for model_name in model_names:
                 problem_id = i + 1
 
                 # # DEBUG: Answer only the first n problems
-                # if i >= 10:
-                #      break
-
-                # Create the log file
-                log_file_path = f"{log_folder_path}/Problem {problem_id}.txt"
-                log = Log(log_level)
-                log.open(log_file_path)
-                log.head(f"Model: {experiment.model_name} | Agent: {experiment.agent_name} | Exam: {experiment.exam_name} | Problem {i + 1} of {len(exam.problems)}")
+                #if i >= 10:
+                #    break
 
                 # Skip the problem if it was already answered correctly
                 if details_reader.is_correct(previous_details_file_path, problem_id):
-                    log.info(f"Skipping problem {problem_id} because it was already answered correctly.")
-                    log.close()
                     continue
 
                 # Load the reflection
@@ -147,34 +115,20 @@ for model_name in model_names:
                 agent = agent_factory.create(experiment.agent_name, model, problem.topic)
 
                 # Create the dialog
-                log.subhead("System:")
                 agent.create_dialog()
-                log.info(agent.dialog.get_all()[0].content)
-                log.subhead("User 1:")
-                log.info(agent.dialog.get_all()[1].content)
-                log.subhead("Assistant 1:")
-                log.info(agent.dialog.get_all()[2].content)
 
                 # Set the problem and reflections
-                log.subhead("User 2:")
                 agent.set_problem(problem)
                 agent.set_reflection(reflection)
-                log.info(agent.dialog.get_all()[3].content)
 
                 # Get the agent's answer
-                log.subhead("Assistant 2:")
                 answer_response = agent.get_answer()
                 answer = agent.get_answer_choice(answer_response.text)
-                log.info(agent.dialog.get_all()[4].content)
 
                 # Log the agent's answer
-                log.subhead("Result:")
                 is_correct = answer == problem.answer
                 score = 1 if is_correct else 0
                 details_row.update_answer(answer_response, answer, score)
-                log.info(f"Agent Answer: {answer}")
-                log.info(f"Correct Answer: {problem.answer}")
-                log.info(f"Score: {score}")
 
                 # Save the dialog
                 dialog_file_path = f"{dialogs_folder_path}/Problem {problem_id}.json"
@@ -196,11 +150,3 @@ for model_name in model_names:
             experiments.load(results_file_path)
             experiments.add_row(experiment, results)
             experiments.save(results_file_path)
-
-            # Log the experiments
-            log_file_path = f"{log_folder_path}/Results.txt"
-            log = Log(LogLevel.INFO)
-            log.open(log_file_path)
-            log.head("Results")
-            log.object(results)
-            log.close()

@@ -14,6 +14,7 @@ model_names = [
     "phi-4"
 ]
 
+
 # Set the agent name
 agent_name = "reflection"
 
@@ -51,6 +52,8 @@ for model_name in model_names:
         # Create the folders
         os.makedirs(reflection_dialogs_folder_path, exist_ok=True)
      
+        print(reflection_dialogs_folder_path)
+
         # Load the exam
         exam = exam_reader.read(exam_file_path)
 
@@ -59,12 +62,14 @@ for model_name in model_names:
             problem_id = i + 1
 
             # # DEBUG: Answer only the first n problems
-            if i >= 10:
-                break
+            #if i >= 10:
+            #    break
 
             # Skip the problem if it was already answered correctly
             if details_reader.is_correct(details_file_path, problem_id):
                 continue
+            
+            print(problem_id)
 
             # Create the agent
             model = model_factory.create(model_name)
